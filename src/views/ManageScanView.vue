@@ -35,7 +35,7 @@
             <i class="bi bi-arrow-clockwise mr-1"></i> Refresh
           </button>
           <RouterLink
-            to="/scan"
+            to="/newScan"
             class="px-4 py-2 rounded-2xl bg-white text-slate-900 font-semibold shadow-lg hover:shadow-2xl text-sm"
           >
             <i class="bi bi-fingerprint mr-1"></i> New Scan
@@ -68,18 +68,18 @@
             v-model="status"
             class="rounded-2xl bg-white/5 border border-white/10 px-3 py-2 backdrop-blur text-sm"
           >
-            <option value="">All statuses</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="locked">Locked</option>
+            <option value="" class="bg-slate-900 text-white">All statuses</option>
+            <option value="active" class="bg-slate-900 text-white">Active</option>
+            <option value="inactive" class="bg-slate-900 text-white">Inactive</option>
+            <option value="locked" class="bg-slate-900 text-white">Locked</option>
           </select>
           <select
             v-model.number="perPage"
             class="rounded-2xl bg-white/5 border border-white/10 px-3 py-2 backdrop-blur text-sm"
           >
-            <option :value="10">10 / page</option>
-            <option :value="25">25 / page</option>
-            <option :value="50">50 / page</option>
+            <option :value="10" class="bg-slate-900 text-white">10 / page</option>
+            <option :value="25" class="bg-slate-900 text-white">25 / page</option>
+            <option :value="50" class="bg-slate-900 text-white">50 / page</option>
           </select>
         </div>
       </div>

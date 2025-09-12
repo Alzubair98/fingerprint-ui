@@ -19,6 +19,16 @@ const router = createRouter({
       name: 'manageScan',
       component: () => import('../views/ManageScanView.vue'),
     },
+    {
+      path: '/newScan',
+      name: 'newScan',
+      component: () => import('../views/newScan.vue'),
+    },
+    {
+      path: '/checkScan',
+      name: 'checkScan',
+      component: () => import('../views/checkScan.vue'),
+    },
   ],
 })
 
