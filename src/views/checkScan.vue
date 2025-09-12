@@ -189,7 +189,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import Swal from 'sweetalert2'
+import Swal from '@/plugins/swal-theme'
 
 interface DeviceDto {
   id: string

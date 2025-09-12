@@ -238,7 +238,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import Swal from 'sweetalert2'
+import Swal from '@/plugins/swal-theme'
 // import api from '@/plugins/axios'; // keep for later when API is ready
 
 // Mock mode settings
