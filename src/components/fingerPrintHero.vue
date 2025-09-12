@@ -55,7 +55,7 @@
               to="/manageScan"
               class="inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/10 text-white font-semibold transition"
             >
-              Manage Devices
+              Manage Users
             </RouterLink>
           </div>
 

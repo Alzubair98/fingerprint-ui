@@ -24,7 +24,9 @@
               >Scan</span
             >
           </h1>
-          <p class="mt-1 text-white/60">Select a user and device, then run a mock scan.</p>
+          <p class="mt-1 text-white/60">
+            Select a user, choose a finger, pick a device — then run a mock scan.
+          </p>
         </div>
         <RouterLink
           to="/manageScan"
@@ -35,7 +37,7 @@
       </div>
 
       <div class="mt-8 grid lg:grid-cols-2 gap-6">
-        <!-- Left: Form Card -->
+        <!-- Left: Form Card (user + device + finger selector + hand preview) -->
         <div
           class="relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl overflow-hidden p-6"
         >
@@ -98,20 +100,101 @@
             <!-- Device -->
             <div class="mt-6">
               <label class="block text-sm text-white/70 mb-1">Device</label>
-              <select
-                v-model="deviceId"
-                class="w-full rounded-2xl bg-white/5 border border-white/10 backdrop-blur px-4 py-2.5 outline-none focus:ring-2 focus:ring-indigo-400/40"
-              >
-                <option disabled value="" class="bg-slate-900 text-white">Select device…</option>
-                <option
-                  v-for="d in devices"
-                  :key="d.id"
-                  :value="d.id"
-                  class="bg-slate-900 rounded-2xl text-white"
+              <div class="relative">
+                <select
+                  v-model="deviceId"
+                  class="appearance-none w-full rounded-2xl bg-white/5 border border-white/10 backdrop-blur px-4 py-2.5 pr-10 outline-none focus:ring-2 focus:ring-indigo-400/40 text-white"
                 >
-                  {{ d.name }} • {{ d.location }}
-                </option>
-              </select>
+                  <option disabled value="">Select device…</option>
+                  <option
+                    v-for="d in devices"
+                    :key="d.id"
+                    :value="d.id"
+                    class="bg-slate-900 text-white"
+                  >
+                    {{ d.name }} • {{ d.location }}
+                  </option>
+                </select>
+                <i
+                  class="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/60"
+                ></i>
+              </div>
+            </div>
+
+            <!-- Finger selection -->
+            <div class="mt-6">
+              <label class="block text-sm text-white/70 mb-2">Finger</label>
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                <button
+                  v-for="f in FINGERS"
+                  :key="f.key"
+                  @click="selectedFinger = f.key"
+                  :class="[
+                    'px-3 py-2 rounded-xl border text-xs backdrop-blur transition',
+                    selectedFinger === f.key
+                      ? 'bg-white text-slate-900 border-white/30 shadow'
+                      : 'bg-white/5 text-white/80 border-white/10 hover:bg-white/10',
+                  ]"
+                >
+                  {{ f.short }}
+                </button>
+              </div>
+              <p class="mt-2 text-xs text-white/60">
+                Selected: <span class="font-semibold">{{ fingerLabel }}</span>
+              </p>
+
+              <!-- Hand preview (small SVG under buttons) -->
+              <div class="mt-4 w-full max-w-[420px]">
+                <svg
+                  viewBox="0 0 640 200"
+                  class="w-full h-auto"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                >
+                  <g stroke="#94a3b8" stroke-opacity=".35" stroke-width="2" fill="#0b1220">
+                    <!-- left hand palm -->
+                    <path
+                      d="M118 120c-6-26 10-54 32-66 22-12 46-9 58 18 14 31 15 73-6 88-25 18-76 2-84-40z"
+                    />
+                    <!-- right hand palm -->
+                    <path
+                      d="M522 120c6-26-10-54-32-66-22-12-46-9-58 18-14 31-15 73 6 88 25 18 76 2 84-40z"
+                    />
+                    <!-- left fingers -->
+                    <rect x="120" y="30" width="20" height="60" rx="10" />
+                    <rect x="146" y="20" width="20" height="70" rx="10" />
+                    <rect x="172" y="14" width="20" height="76" rx="10" />
+                    <rect x="198" y="20" width="20" height="70" rx="10" />
+                    <rect x="224" y="36" width="20" height="54" rx="10" />
+                    <!-- right fingers -->
+                    <rect x="498" y="30" width="20" height="60" rx="10" />
+                    <rect x="472" y="20" width="20" height="70" rx="10" />
+                    <rect x="446" y="14" width="20" height="76" rx="10" />
+                    <rect x="420" y="20" width="20" height="70" rx="10" />
+                    <rect x="394" y="36" width="20" height="54" rx="10" />
+                  </g>
+                  <g>
+                    <!-- Left highlights -->
+                    <rect x="224" y="36" width="20" height="54" rx="10" :class="hl('L_THUMB')" />
+                    <rect x="198" y="20" width="20" height="70" rx="10" :class="hl('L_INDEX')" />
+                    <rect x="172" y="14" width="20" height="76" rx="10" :class="hl('L_MIDDLE')" />
+                    <rect x="146" y="20" width="20" height="70" rx="10" :class="hl('L_RING')" />
+                    <rect x="120" y="30" width="20" height="60" rx="10" :class="hl('L_PINKY')" />
+                    <!-- Right highlights -->
+                    <rect x="498" y="30" width="20" height="60" rx="10" :class="hl('R_PINKY')" />
+                    <rect x="472" y="20" width="20" height="70" rx="10" :class="hl('R_RING')" />
+                    <rect x="446" y="14" width="20" height="76" rx="10" :class="hl('R_MIDDLE')" />
+                    <rect x="420" y="20" width="20" height="70" rx="10" :class="hl('R_INDEX')" />
+                    <rect x="394" y="36" width="20" height="54" rx="10" :class="hl('R_THUMB')" />
+                  </g>
+                  <defs>
+                    <linearGradient id="fg" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#818cf8" />
+                      <stop offset="100%" stop-color="#e879f9" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
             </div>
 
             <!-- Notes -->
@@ -143,7 +226,7 @@
           </div>
         </div>
 
-        <!-- Right: Live Card -->
+        <!-- Right: Live Card (animated fingerprint, % match, device, user) -->
         <div
           class="relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl overflow-hidden p-6"
         >
@@ -237,6 +320,30 @@ interface DeviceDto {
   location: string
 }
 
+type FingerKey =
+  | 'L_THUMB'
+  | 'L_INDEX'
+  | 'L_MIDDLE'
+  | 'L_RING'
+  | 'L_PINKY'
+  | 'R_THUMB'
+  | 'R_INDEX'
+  | 'R_MIDDLE'
+  | 'R_RING'
+  | 'R_PINKY'
+const FINGERS = [
+  { key: 'L_THUMB', short: 'L-Thumb', label: 'Left Thumb' },
+  { key: 'L_INDEX', short: 'L-Index', label: 'Left Index' },
+  { key: 'L_MIDDLE', short: 'L-Middle', label: 'Left Middle' },
+  { key: 'L_RING', short: 'L-Ring', label: 'Left Ring' },
+  { key: 'L_PINKY', short: 'L-Pinky', label: 'Left Pinky' },
+  { key: 'R_THUMB', short: 'R-Thumb', label: 'Right Thumb' },
+  { key: 'R_INDEX', short: 'R-Index', label: 'Right Index' },
+  { key: 'R_MIDDLE', short: 'R-Middle', label: 'Right Middle' },
+  { key: 'R_RING', short: 'R-Ring', label: 'Right Ring' },
+  { key: 'R_PINKY', short: 'R-Pinky', label: 'Right Pinky' },
+] as const
+
 const FIRST = [
   'Ali',
   'Sara',
@@ -294,6 +401,7 @@ const devices: DeviceDto[] = [
 // --- form state ---
 const userQuery = ref('')
 const selectedUser = ref<UserDto | null>(null)
+const selectedFinger = ref<FingerKey | ''>('')
 const deviceId = ref<string>('')
 const notes = ref('')
 const loading = ref(false)
@@ -307,15 +415,17 @@ const filteredUsers = computed(() => {
 })
 
 const showUserList = computed(() => !!userQuery.value && !selectedUser.value)
+const canStart = computed(() => !!selectedUser.value && !!selectedFinger.value && !!deviceId.value)
 
-const canStart = computed(() => !!selectedUser.value && !!deviceId.value)
-
-// live preview state
+// live preview state (right card)
 const scanning = ref(false)
 const matchPct = ref(0)
 const stateLabel = computed(() => (scanning.value ? 'Scanning' : 'Idle'))
 const userLabel = computed(() => (selectedUser.value ? selectedUser.value.full_name : '—'))
 const deviceLabel = computed(() => devices.find((d) => d.id === deviceId.value)?.name || '—')
+const fingerLabel = computed(
+  () => FINGERS.find((f) => f.key === (selectedFinger.value as any))?.label || '—',
+)
 
 function onUserInput() {
   /* reactive via computed */
@@ -338,6 +448,12 @@ function initials(name: string) {
     .join('')
 }
 
+function hl(key: FingerKey) {
+  return selectedFinger.value === key
+    ? 'fill-[url(#fg)] drop-shadow-[0_0_16px_rgba(99,102,241,0.35)]'
+    : 'fill-transparent'
+}
+
 function scanClass(i: number) {
   // when scanning: loop; when idle: faint lines
   return scanning.value ? `trace trace${i} animate` : `trace idle`
@@ -349,7 +465,6 @@ async function startScan() {
   scanning.value = true
   matchPct.value = 0
 
-  // staged sweetalerts for vibes
   await Swal.fire({
     title: 'Connecting to device…',
     allowOutsideClick: false,
@@ -358,6 +473,7 @@ async function startScan() {
   })
   await Swal.fire({
     title: 'Capturing fingerprint…',
+    html: `<small>${fingerLabel.value}</small>`,
     allowOutsideClick: false,
     didOpen: () => Swal.showLoading(),
     timer: 1200,
@@ -374,7 +490,7 @@ async function startScan() {
 
   await Swal.fire({
     title: 'Match found',
-    text: `${selectedUser.value!.full_name} • ${matchPct.value}%`,
+    text: `${selectedUser.value!.full_name} • ${matchPct.value}% • ${fingerLabel.value}`,
     icon: 'success',
     timer: 1100,
     showConfirmButton: false,
@@ -386,6 +502,7 @@ async function startScan() {
 function resetForm() {
   userQuery.value = ''
   selectedUser.value = null
+  selectedFinger.value = ''
   deviceId.value = ''
   notes.value = ''
   scanning.value = false
@@ -398,7 +515,7 @@ function sleep(ms: number) {
 </script>
 
 <style scoped>
-/* base line style for fingerprint; animated when .animate is present */
+/* fingerprint animation in right card */
 .trace {
   stroke-dasharray: 500;
   stroke-dashoffset: 500;
@@ -427,12 +544,18 @@ function sleep(ms: number) {
 .trace:nth-child(5).animate {
   animation-delay: 0.72s;
 }
-
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
     opacity: 1;
   }
+}
+
+/* smooth highlight transition for finger preview */
+svg rect {
+  transition:
+    fill 0.25s ease,
+    filter 0.25s ease;
 }
 
 /* blobs */
