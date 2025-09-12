@@ -29,6 +29,11 @@ const router = createRouter({
       name: 'checkScan',
       component: () => import('../views/checkScan.vue'),
     },
+    {
+      path: '/addUser',
+      name: 'addUser',
+      component: () => import('../views/UserManagment/addUser.vue'),
+    },
   ],
 })
 

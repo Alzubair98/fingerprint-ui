@@ -40,6 +40,12 @@
           >
             <i class="bi bi-fingerprint mr-1"></i> New Scan
           </RouterLink>
+          <RouterLink
+            to="/addUser"
+            class="px-4 py-2 rounded-2xl bg-white text-slate-900 font-semibold shadow-lg hover:shadow-2xl text-sm"
+          >
+            <i class="bi bi-person mr-1"></i> Add User
+          </RouterLink>
         </div>
       </div>
 

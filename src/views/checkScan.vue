@@ -178,6 +178,10 @@
                   <p class="text-xs text-white/60">Confidence</p>
                   <p class="text-lg font-semibold">{{ confidence }}%</p>
                 </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <p class="text-xs text-white/60">Person</p>
+                  <p class="text-lg font-semibold">SomeOne</p>
+                </div>
               </div>
             </div>
           </div>

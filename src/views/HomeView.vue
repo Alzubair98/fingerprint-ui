@@ -1,9 +1,7 @@
 <template>
   <main class="bg-gradient-to-b from-slate-900 via-slate-950 to-black text-white overflow-hidden">
-    <!-- HERO -->
     <finger-print-hero />
 
-    <!-- BODY / QUICK ACTIONS -->
     <section class="relative py-16 md:py-24">
       <!-- floating blobs echo -->
       <div
@@ -25,7 +23,7 @@
         <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <!-- Card: Check Fingerprint -->
           <RouterLink
-            to="/check"
+            to="/checkScan"
             class="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl transition-transform hover:-translate-y-0.5 hover:shadow-[0_30px_60px_rgba(0,0,0,0.35)];"
           >
             <div class="feature-glow"></div>
@@ -49,7 +47,7 @@
 
           <!-- Card: Add New Scan -->
           <RouterLink
-            to="/scan"
+            to="/newScan"
             class="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl transition-transform hover:-translate-y-0.5 hover:shadow-[0_30px_60px_rgba(0,0,0,0.35)];"
           >
             <div class="feature-glow"></div>
@@ -73,7 +71,7 @@
 
           <!-- Card: Manage Scans -->
           <RouterLink
-            to="/devices"
+            to="/manageScan"
             class="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl transition-transform hover:-translate-y-0.5 hover:shadow-[0_30px_60px_rgba(0,0,0,0.35)];"
           >
             <div class="feature-glow"></div>
