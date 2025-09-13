@@ -174,12 +174,12 @@
                       >
                         <i class="bi bi-person"></i><span class="sr-only">View</span>
                       </button>
-                      <button
+                      <RouterLink
+                        to="/newScan"
                         class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur text-sm transition cursor-pointer"
-                        @click="triggerScan(u)"
                       >
                         <i class="bi bi-fingerprint"></i><span class="sr-only">Scan</span>
-                      </button>
+                      </RouterLink>
                       <button
                         class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur text-sm transition text-rose-300 hover:bg-rose-500/10 border-rose-400/20 cursor-pointer"
                         @click="removeUser(u)"
