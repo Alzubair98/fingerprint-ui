@@ -125,11 +125,11 @@
               <span class="px-2 py-1 rounded-lg border border-white/10 bg-white/5">{{
                 labelFor(cap.finger)
               }}</span>
-              <span class="text-white/70">{{ cap.confidence }}%</span>
+              <!-- <span class="text-white/70">{{ cap.confidence }}%</span> -->
             </div>
-            <div class="mt-1 text-xs" :class="confidenceClass(cap.confidence)">
+            <!-- <div class="mt-1 text-xs" :class="confidenceClass(cap.confidence)">
               {{ confidenceLabel(cap.confidence) }}
-            </div>
+            </div> -->
             <div class="mt-2 text-xs text-white/60">
               {{ new Date(cap.created_at).toLocaleString() }} • {{ cap.device_name }} ({{
                 cap.device_loc

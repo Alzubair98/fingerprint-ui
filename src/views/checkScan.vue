@@ -187,6 +187,9 @@
                   <p class="text-lg font-semibold">{{ latencyLabel }}</p>
                 </div>
               </div>
+              <div class="mt-5 text-xs text-center" :class="confidenceClass(confidence)">
+                {{ confidenceLabel(confidence) }}
+              </div>
             </div>
           </div>
         </div>
@@ -202,6 +205,18 @@ import Swal from '@/plugins/swal-theme'
 import axios from 'axios'
 
 const apiURL = import.meta.env.VITE_API_BASE
+
+function confidenceLabel(val: number) {
+  if (val > 80) return 'Bank level security'
+  if (val > 50) return 'Gym level security'
+  return '😂 Just for fun'
+}
+
+function confidenceClass(val: number) {
+  if (val > 80) return 'text-green-400'
+  if (val > 50) return 'text-yellow-400'
+  return 'text-rose-400'
+}
 
 interface DeviceDto {
   id: string

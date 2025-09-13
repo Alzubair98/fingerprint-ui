@@ -269,7 +269,7 @@
                   </defs>
                 </svg>
 
-                <img :src="imageUrl" alt="finger print image" />
+                <img v-if="imageUrl" :src="imageUrl" alt="finger print image" />
               </div>
 
               <div class="mt-6 grid grid-cols-2 gap-4">
