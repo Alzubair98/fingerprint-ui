@@ -25,15 +25,23 @@
         <!-- <RouterLink to="/docs" class="text-sm text-white/70 hover:text-white transition"
           >Docs</RouterLink
         > -->
-        <button
-          @click="toggle"
-          class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-black/10 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
-          aria-label="Toggle color mode"
-        >
-          <span v-if="isDark" class="i bi-moon-stars"></span>
-          <span v-else class="i bi-brightness-high"></span>
-          <span class="font-medium">{{ label }}</span>
-        </button>
+        <div class="flex gap-5">
+          <button
+            @click="toggle"
+            class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-black/10 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
+            aria-label="Toggle color mode"
+          >
+            <span v-if="isDark" class="i bi-moon-stars"></span>
+            <span v-else class="i bi-brightness-high"></span>
+            <span class="font-medium">{{ label }}</span>
+          </button>
+          <button
+            @click="changeLang"
+            class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-black/10 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
+          >
+            En/Ar
+          </button>
+        </div>
       </nav>
 
       <div class="grid lg:grid-cols-2 gap-10 items-center pt-8">
@@ -74,6 +82,7 @@
             <span class="text-sm">Pinia</span>
             <span class="text-sm">Tailwind</span>
             <span class="text-sm">SweetAlert2</span>
+            <span class="text-sm">Axios</span>
           </div>
         </div>
 
@@ -152,8 +161,16 @@ const goScan = () => {
 
 import { computed } from 'vue'
 import { useTheme } from '../composable/useTheme'
+import Swal from '@/plugins/swal-theme'
+
 const { isDark, toggle, mode } = useTheme()
 const label = computed(() => (isDark.value ? 'Dark' : 'Light'))
+
+const changeLang = () => {
+  Swal.fire({
+    title: 'easy take english course',
+  })
+}
 </script>
 
 <style scoped>
