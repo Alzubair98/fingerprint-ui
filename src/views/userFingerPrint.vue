@@ -161,29 +161,48 @@
       </div>
 
       <!-- Pagination -->
-      <div class="mt-8 flex items-center justify-center gap-2">
-        <button
-          class="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur disabled:opacity-50"
-          :disabled="page === 1"
-          @click="page--"
-        >
-          Prev
-        </button>
-        <span class="text-sm text-white/70">Page {{ page }} / {{ totalPages }}</span>
-        <button
-          class="px-3 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur disabled:opacity-50"
-          :disabled="page === totalPages"
-          @click="page++"
-        >
-          Next
-        </button>
+
+      <div
+        class="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 border-t border-white/10"
+      >
+        <div class="text-xs text-white/50">Page {{ page }} of {{ totalPages }}</div>
+        <div class="flex items-center gap-2">
+          <button
+            class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="page === 1"
+            @click="goto(1)"
+          >
+            <i class="bi bi-chevron-double-left"></i>
+          </button>
+          <button
+            class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="page === 1"
+            @click="goto(page - 1)"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button
+            class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="page === totalPages"
+            @click="goto(page + 1)"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+          <button
+            class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="page === totalPages"
+            @click="goto(totalPages)"
+          >
+            <i class="bi bi-chevron-double-right"></i>
+          </button>
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import Swal from '@/plugins/swal-theme'
 import axios from 'axios'
@@ -224,6 +243,13 @@ const fetchOneUser = async () => {
     Swal.fire({
       title: 'user not found',
     })
+  }
+}
+
+function goto(p: number) {
+  const target = Math.min(Math.max(1, p), totalPages.value)
+  if (target !== page.value) {
+    page.value = target
   }
 }
 

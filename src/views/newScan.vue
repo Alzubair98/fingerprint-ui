@@ -126,7 +126,7 @@
                 <button
                   v-for="f in FINGERS"
                   :key="f.key"
-                  @click="selectedFinger = f"
+                  @click="selectFinger(f)"
                   :class="[
                     'px-3 py-2 rounded-xl border text-xs backdrop-blur transition',
                     selectedFinger.key === f.key
@@ -237,6 +237,7 @@
               <div class="mx-auto size-72 md:size-80 grid place-items-center">
                 <!-- animated fingerprint svg (loop while scanning) -->
                 <svg
+                  v-if="!imageUrl"
                   viewBox="0 0 200 200"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -267,6 +268,8 @@
                     </linearGradient>
                   </defs>
                 </svg>
+
+                <img :src="imageUrl" alt="finger print image" />
               </div>
 
               <div class="mt-6 grid grid-cols-2 gap-4">
@@ -431,6 +434,11 @@ const fingerLabel = computed(
   () => FINGERS.find((f) => f.key === (selectedFinger.value as any))?.label || '—',
 )
 
+const selectFinger = (f) => {
+  imageUrl = ''
+  selectedFinger.value = f
+}
+
 function onUserInput() {
   /* reactive via computed */
 }
@@ -463,6 +471,8 @@ function scanClass(i: number) {
   return scanning.value ? `trace trace${i} animate` : `trace idle`
 }
 
+let imageUrl = ''
+
 async function startScan() {
   if (!canStart.value) return
   loading.value = true
@@ -475,9 +485,13 @@ async function startScan() {
       finger: selectedFinger.value.id.toString(),
     }
 
-    const response = await axios.post(apiURL + 'scans', payload)
+    const response = await axios.post(apiURL + 'scans', payload, {
+      responseType: 'blob',
+    })
 
-    if (response.status == 201) {
+    if (response.status == 200) {
+      imageUrl = URL.createObjectURL(response.data)
+
       await Swal.fire({
         title: 'Connecting to device…',
         allowOutsideClick: false,
@@ -502,7 +516,7 @@ async function startScan() {
       matchPct.value = Math.min(100, matchPct.value + 5 + Math.floor(Math.random() * 6))
 
       await Swal.fire({
-        title: 'Match found',
+        title: 'fingerprint saved successfuly',
         text: `${selectedUser.value!.name} • ${matchPct.value}% • ${fingerLabel.value}`,
         icon: 'success',
         timer: 1100,

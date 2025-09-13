@@ -27,6 +27,13 @@
           <p class="mt-1 text-white/60">List, search, and trigger scans for users in the system.</p>
         </div>
         <div class="flex items-center gap-3">
+          <RouterLink
+            to="/"
+            class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur text-sm"
+          >
+            <i class="bi bi-house mr-1"></i> Home
+          </RouterLink>
+
           <button
             class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur text-sm"
             @click="refresh"
@@ -103,9 +110,9 @@
             <div class="text-white/70 text-sm">
               Showing {{ showingFrom }}–{{ showingTo }} of {{ total }} results
             </div>
-            <div class="text-white/50 text-xs">
+            <!-- <div class="text-white/50 text-xs">
               Mock mode is <span class="font-semibold">ON</span>
-            </div>
+            </div> -->
           </div>
 
           <div class="overflow-x-auto">
@@ -306,7 +313,6 @@ async function fetchUsers() {
     } else {
       await sleep(MOCK_DELAY)
       const response = await userStore.fetchUsers()
-      console.log(response)
 
       if (response?.status == 200) {
         ALL_USERS = response.data

@@ -22,9 +22,18 @@
           </div>
           <span class="font-semibold tracking-wide">Fingerprint System</span>
         </div>
-        <RouterLink to="/docs" class="text-sm text-white/70 hover:text-white transition"
+        <!-- <RouterLink to="/docs" class="text-sm text-white/70 hover:text-white transition"
           >Docs</RouterLink
+        > -->
+        <button
+          @click="toggle"
+          class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-black/10 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
+          aria-label="Toggle color mode"
         >
+          <span v-if="isDark" class="i bi-moon-stars"></span>
+          <span v-else class="i bi-brightness-high"></span>
+          <span class="font-medium">{{ label }}</span>
+        </button>
       </nav>
 
       <div class="grid lg:grid-cols-2 gap-10 items-center pt-8">
@@ -140,6 +149,11 @@ const dash = (i: number) => {
 const goScan = () => {
   router.push('/newScan') // you can add this route later
 }
+
+import { computed } from 'vue'
+import { useTheme } from '../composable/useTheme'
+const { isDark, toggle, mode } = useTheme()
+const label = computed(() => (isDark.value ? 'Dark' : 'Light'))
 </script>
 
 <style scoped>
