@@ -126,10 +126,10 @@
                 <button
                   v-for="f in FINGERS"
                   :key="f.key"
-                  @click="selectedFinger = f.key"
+                  @click="selectedFinger = f"
                   :class="[
                     'px-3 py-2 rounded-xl border text-xs backdrop-blur transition',
-                    selectedFinger === f.key
+                    selectedFinger.key === f.key
                       ? 'bg-white text-slate-900 border-white/30 shadow'
                       : 'bg-white/5 text-white/80 border-white/10 hover:bg-white/10',
                   ]"
@@ -302,6 +302,8 @@ import { ref, computed, onMounted } from 'vue'
 import Swal from '@/plugins/swal-theme'
 import { useUserStore } from '@/stores/usersStore'
 import { storeToRefs } from 'pinia'
+import axios from 'axios'
+const apiURL = import.meta.env.VITE_API_BASE
 
 // stores
 const userStore = useUserStore()
@@ -335,16 +337,16 @@ type FingerKey =
   | 'R_RING'
   | 'R_PINKY'
 const FINGERS = [
-  { key: 'L_THUMB', short: 'L-Thumb', label: 'Left Thumb' },
-  { key: 'L_INDEX', short: 'L-Index', label: 'Left Index' },
-  { key: 'L_MIDDLE', short: 'L-Middle', label: 'Left Middle' },
-  { key: 'L_RING', short: 'L-Ring', label: 'Left Ring' },
-  { key: 'L_PINKY', short: 'L-Pinky', label: 'Left Pinky' },
-  { key: 'R_THUMB', short: 'R-Thumb', label: 'Right Thumb' },
-  { key: 'R_INDEX', short: 'R-Index', label: 'Right Index' },
-  { key: 'R_MIDDLE', short: 'R-Middle', label: 'Right Middle' },
-  { key: 'R_RING', short: 'R-Ring', label: 'Right Ring' },
-  { key: 'R_PINKY', short: 'R-Pinky', label: 'Right Pinky' },
+  { key: 'L_THUMB', short: 'L-Thumb', label: 'Left Thumb', id: 1 },
+  { key: 'L_INDEX', short: 'L-Index', label: 'Left Index', id: 2 },
+  { key: 'L_MIDDLE', short: 'L-Middle', label: 'Left Middle', id: 3 },
+  { key: 'L_RING', short: 'L-Ring', label: 'Left Ring', id: 4 },
+  { key: 'L_PINKY', short: 'L-Pinky', label: 'Left Pinky', id: 5 },
+  { key: 'R_THUMB', short: 'R-Thumb', label: 'Right Thumb', id: 6 },
+  { key: 'R_INDEX', short: 'R-Index', label: 'Right Index', id: 7 },
+  { key: 'R_MIDDLE', short: 'R-Middle', label: 'Right Middle', id: 8 },
+  { key: 'R_RING', short: 'R-Ring', label: 'Right Ring', id: 9 },
+  { key: 'R_PINKY', short: 'R-Pinky', label: 'Right Pinky', id: 10 },
 ] as const
 
 const FIRST = [
@@ -404,7 +406,7 @@ const devices: DeviceDto[] = [
 // --- form state ---
 const userQuery = ref('')
 const selectedUser = ref<UserDto | null>(null)
-const selectedFinger = ref<FingerKey | ''>('')
+const selectedFinger = ref<FingerKey | {}>({})
 const deviceId = ref<string>('')
 const notes = ref('')
 const loading = ref(false)
@@ -451,7 +453,7 @@ function initials(name: string) {
 }
 
 function hl(key: FingerKey) {
-  return selectedFinger.value === key
+  return selectedFinger.value.key === key
     ? 'fill-[url(#fg)] drop-shadow-[0_0_16px_rgba(99,102,241,0.35)]'
     : 'fill-transparent'
 }
@@ -467,38 +469,53 @@ async function startScan() {
   scanning.value = true
   matchPct.value = 0
 
-  await Swal.fire({
-    title: 'Connecting to device…',
-    allowOutsideClick: false,
-    didOpen: () => Swal.showLoading(),
-    timer: 800,
-  })
-  await Swal.fire({
-    title: 'Capturing fingerprint…',
-    html: `<small>${fingerLabel.value}</small>`,
-    allowOutsideClick: false,
-    didOpen: () => Swal.showLoading(),
-    timer: 1200,
-  })
+  try {
+    const payload = {
+      person_id: selectedUser.value?.id,
+      finger: selectedFinger.value.id.toString(),
+    }
 
-  // fake progress
-  for (let i = 0; i <= 5; i++) {
-    matchPct.value = Math.min(100, i * 18 + Math.floor(Math.random() * 10))
-    await sleep(220)
+    const response = await axios.post(apiURL + 'scans', payload)
+
+    if (response.status == 201) {
+      await Swal.fire({
+        title: 'Connecting to device…',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        timer: 800,
+      })
+      await Swal.fire({
+        title: 'Capturing fingerprint…',
+        html: `<small>${fingerLabel.value}</small>`,
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        timer: 1200,
+      })
+
+      // fake progress
+      for (let i = 0; i <= 5; i++) {
+        matchPct.value = Math.min(100, i * 18 + Math.floor(Math.random() * 10))
+        await sleep(220)
+      }
+
+      scanning.value = false
+      matchPct.value = Math.min(100, matchPct.value + 5 + Math.floor(Math.random() * 6))
+
+      await Swal.fire({
+        title: 'Match found',
+        text: `${selectedUser.value!.name} • ${matchPct.value}% • ${fingerLabel.value}`,
+        icon: 'success',
+        timer: 1100,
+        showConfirmButton: false,
+      })
+    }
+
+    console.log(response)
+  } catch (error) {
+    console.log(error)
+  } finally {
+    loading.value = false
   }
-
-  scanning.value = false
-  matchPct.value = Math.min(100, matchPct.value + 5 + Math.floor(Math.random() * 6))
-
-  await Swal.fire({
-    title: 'Match found',
-    text: `${selectedUser.value!.name} • ${matchPct.value}% • ${fingerLabel.value}`,
-    icon: 'success',
-    timer: 1100,
-    showConfirmButton: false,
-  })
-
-  loading.value = false
 }
 
 function resetForm() {
