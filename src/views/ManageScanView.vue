@@ -244,11 +244,12 @@
 <script setup lang="ts">
 const apiURL = import.meta.env.VITE_API_BASE
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import Swal from '@/plugins/swal-theme'
 import axios from 'axios'
-// import api from '@/plugins/axios'; // keep for later when API is ready
+import { useUserStore } from '@/stores/usersStore'
 
+//stores
+const userStore = useUserStore()
 // Mock mode settings
 const USE_MOCK = false
 const MOCK_DELAY = 450 // ms
@@ -303,9 +304,10 @@ async function fetchUsers() {
       total.value = t
     } else {
       await sleep(MOCK_DELAY)
-      const response = await axios.get(apiURL + 'people')
+      const response = await userStore.fetchUsers()
+      console.log(response)
 
-      if (response.status == 200) {
+      if (response?.status == 200) {
         ALL_USERS = response.data
         const { items, total: t } = queryMock(q.value, status.value, page.value, perPage.value)
         users.value = items
