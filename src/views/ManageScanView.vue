@@ -146,7 +146,7 @@
                       </div>
                       <div>
                         <div class="font-semibold">{{ u.name }}</div>
-                        <div class="text-white/50 text-xs">ID: {{ u.employee_id }}</div>
+                        <div class="text-white/50 text-xs">ID: {{ u.id }}</div>
                       </div>
                     </div>
                   </td>
@@ -387,7 +387,7 @@ function viewUser(u: UserDto) {
 async function removeUser(u: UserDto) {
   const ask = await Swal.fire({
     title: 'Delete user?',
-    text: `This will remove ${u.full_name}`,
+    text: `This will remove ${u.name}`,
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Delete',
@@ -395,15 +395,22 @@ async function removeUser(u: UserDto) {
   })
   if (!ask.isConfirmed) return
 
-  // remove from mock dataset
-  const i = ALL_USERS.findIndex((x) => x.id === u.id)
-  if (i > -1) ALL_USERS.splice(i, 1)
+  try {
+    const response = await axios.delete(apiURL + 'people/' + u.id)
 
-  await Swal.fire({ title: 'Deleted', icon: 'success', timer: 900, showConfirmButton: false })
-  // refresh current page; adjust if past the end
-  const maxPages = Math.max(1, Math.ceil((total.value - 1) / perPage.value))
-  page.value = Math.min(page.value, maxPages)
-  fetchUsers()
+    if (response.status == 204) {
+      const i = ALL_USERS.findIndex((x) => x.id === u.id)
+      if (i > -1) ALL_USERS.splice(i, 1)
+
+      await Swal.fire({ title: 'Deleted', icon: 'success', timer: 900, showConfirmButton: false })
+      // refresh current page; adjust if past the end
+      const maxPages = Math.max(1, Math.ceil((total.value - 1) / perPage.value))
+      page.value = Math.min(page.value, maxPages)
+      fetchUsers()
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function refresh() {
