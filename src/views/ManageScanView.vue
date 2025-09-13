@@ -168,12 +168,13 @@
                   </td>
                   <td class="px-4 sm:px-6 py-4">
                     <div class="flex items-center gap-2 justify-end">
-                      <button
+                      <RouterLink
+                        :to="`/manageScan/${u.id}/userFingerPrint`"
                         class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur text-sm transition cursor-pointer"
                         @click="viewUser(u)"
                       >
                         <i class="bi bi-person"></i><span class="sr-only">View</span>
-                      </button>
+                      </RouterLink>
                       <RouterLink
                         to="/newScan"
                         class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 backdrop-blur text-sm transition cursor-pointer"
