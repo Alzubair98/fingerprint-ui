@@ -55,8 +55,8 @@
             >
           </h1>
           <p class="mt-4 text-white/70 max-w-xl lg:ml-auto lg:mr-0 mx-auto">
-            A modern frontend for your fingerprint system built with Vue&nbsp;3, Pinia, Tailwind,
-            and SweetAlert2. Smooth animations, glass UI, and production-ready structure.
+            Modren fingerprint system built with Vue&nbsp;3, Pinia, Tailwind, and SweetAlert2.
+            Smooth animations, glass UI, and production-ready structure.
           </p>
 
           <div class="mt-8 flex flex-col sm:flex-row gap-4 sm:justify-center lg:justify-end">
