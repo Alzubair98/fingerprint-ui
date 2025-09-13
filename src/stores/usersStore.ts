@@ -9,6 +9,7 @@ export const useUserStore = defineStore('userStore', () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(apiURL + 'people')
+      allUsers.value = response.data
 
       return response
     } catch (error) {

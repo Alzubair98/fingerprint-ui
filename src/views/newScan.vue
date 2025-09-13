@@ -70,11 +70,11 @@
                     <div
                       class="size-8 rounded-full bg-gradient-to-br from-indigo-400/60 to-fuchsia-400/60 grid place-items-center text-[11px] font-bold"
                     >
-                      {{ initials(u.full_name) }}
+                      {{ initials(u.name) }}
                     </div>
                     <div>
-                      <div class="text-sm font-semibold">{{ u.full_name }}</div>
-                      <div class="text-white/50 text-xs">{{ u.employee_id }} • {{ u.email }}</div>
+                      <div class="text-sm font-semibold">{{ u.name }}</div>
+                      <div class="text-white/50 text-xs">{{ u.id }} • {{ u.email }}</div>
                     </div>
                   </div>
                 </li>
@@ -89,9 +89,7 @@
               v-if="selectedUser"
               class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-white/10 border border-white/10"
             >
-              <span class="text-sm"
-                >{{ selectedUser.full_name }} ({{ selectedUser.employee_id }})</span
-              >
+              <span class="text-sm">{{ selectedUser.name }} ({{ selectedUser.id }})</span>
               <button class="text-white/60 hover:text-white" @click="clearUser">
                 <i class="bi bi-x"></i>
               </button>
@@ -300,16 +298,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import Swal from '@/plugins/swal-theme'
+import { useUserStore } from '@/stores/usersStore'
+import { storeToRefs } from 'pinia'
 
+// stores
+const userStore = useUserStore()
+const { allUsers } = storeToRefs(userStore)
 // --- mock datasets ---
 
 type Status = 'active' | 'inactive' | 'locked'
 interface UserDto {
   id: number
   employee_id: string
-  full_name: string
+  name: string
   email: string
   status: Status
   last_scan_at: string | null
@@ -405,13 +408,12 @@ const selectedFinger = ref<FingerKey | ''>('')
 const deviceId = ref<string>('')
 const notes = ref('')
 const loading = ref(false)
+//const users = userStore.allUsers
 
 const filteredUsers = computed(() => {
   const q = userQuery.value.toLowerCase().trim()
-  if (!q) return ALL_USERS.slice(0, 10)
-  return ALL_USERS.filter(
-    (u) => u.full_name.toLowerCase().includes(q) || u.employee_id.toLowerCase().includes(q),
-  ).slice(0, 10)
+  if (!q) return allUsers.value.slice(0, 10)
+  return allUsers.value.filter((u) => u.name.toLowerCase().includes(q)).slice(0, 10)
 })
 
 const showUserList = computed(() => !!userQuery.value && !selectedUser.value)
@@ -421,7 +423,7 @@ const canStart = computed(() => !!selectedUser.value && !!selectedFinger.value &
 const scanning = ref(false)
 const matchPct = ref(0)
 const stateLabel = computed(() => (scanning.value ? 'Scanning' : 'Idle'))
-const userLabel = computed(() => (selectedUser.value ? selectedUser.value.full_name : '—'))
+const userLabel = computed(() => (selectedUser.value ? selectedUser.value.name : '—'))
 const deviceLabel = computed(() => devices.find((d) => d.id === deviceId.value)?.name || '—')
 const fingerLabel = computed(
   () => FINGERS.find((f) => f.key === (selectedFinger.value as any))?.label || '—',
@@ -490,7 +492,7 @@ async function startScan() {
 
   await Swal.fire({
     title: 'Match found',
-    text: `${selectedUser.value!.full_name} • ${matchPct.value}% • ${fingerLabel.value}`,
+    text: `${selectedUser.value!.name} • ${matchPct.value}% • ${fingerLabel.value}`,
     icon: 'success',
     timer: 1100,
     showConfirmButton: false,
@@ -512,6 +514,10 @@ function resetForm() {
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms))
 }
+
+onMounted(() => {
+  userStore.fetchUsers()
+})
 </script>
 
 <style scoped>
