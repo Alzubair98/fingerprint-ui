@@ -26,7 +26,7 @@
             <h1 class="text-2xl md:text-3xl font-extrabold leading-tight">
               {{ user?.name || 'User' }}
               <span class="ml-2 text-sm font-semibold text-white/60">
-                (EMP-${{ String(user?.id).padStart(4, '0') }})</span
+                (EMP{{ String(user?.id).padStart(4, '0') }})</span
               >
             </h1>
             <p class="mt-1 text-white/60 text-sm">All captured fingerprints for {{ user?.name }}</p>
@@ -68,7 +68,7 @@
               <option
                 v-for="f in FINGERS"
                 :key="f.key"
-                :value="f.key"
+                :value="f.id"
                 class="bg-slate-900 text-white"
               >
                 {{ f.label }}
@@ -266,53 +266,109 @@ type FingerKey =
   | 'R_MIDDLE'
   | 'R_RING'
   | 'R_PINKY'
+
 const FINGERS = [
-  { key: 'L_THUMB', label: 'Left Thumb' },
-  { key: 'L_INDEX', label: 'Left Index' },
-  { key: 'L_MIDDLE', label: 'Left Middle' },
-  { key: 'L_RING', label: 'Left Ring' },
-  { key: 'L_PINKY', label: 'Left Pinky' },
-  { key: 'R_THUMB', label: 'Right Thumb' },
-  { key: 'R_INDEX', label: 'Right Index' },
-  { key: 'R_MIDDLE', label: 'Right Middle' },
-  { key: 'R_RING', label: 'Right Ring' },
-  { key: 'R_PINKY', label: 'Right Pinky' },
+  { id: 1, key: 'L_THUMB', label: 'Left Thumb' },
+  { id: 2, key: 'L_INDEX', label: 'Left Index' },
+  { id: 3, key: 'L_MIDDLE', label: 'Left Middle' },
+  { id: 4, key: 'L_RING', label: 'Left Ring' },
+  { id: 5, key: 'L_PINKY', label: 'Left Pinky' },
+  { id: 6, key: 'R_THUMB', label: 'Right Thumb' },
+  { id: 7, key: 'R_INDEX', label: 'Right Index' },
+  { id: 8, key: 'R_MIDDLE', label: 'Right Middle' },
+  { id: 9, key: 'R_RING', label: 'Right Ring' },
+  { id: 10, key: 'R_PINKY', label: 'Right Pinky' },
 ] as const
+
+const captures = ref<Capture[]>([])
 
 interface Capture {
   id: number
-  finger: FingerKey
-  confidence: number
+  finger: number
   created_at: number
   device_name: string
   device_loc: string
+  confidence: number
   thumb: string | null
 }
-const captures = ref<Capture[]>([])
+
+const fingerPrints = ref<Capture[]>([])
+
+async function fetchPrints() {
+  try {
+    const { data } = await axios.get(`${apiURL}people/${userId}/scans`)
+    // map once and keep types aligned
+    const mapped: Capture[] = data.map((scan: any) => {
+      const d = randomDevice()
+      return {
+        id: scan.id,
+        finger: Number(scan.finger), // ensure number
+        created_at: randomDate(),
+        device_name: d.name, // one call
+        device_loc: d.loc,
+        confidence: 50 + Math.floor(Math.random() * 50),
+        thumb: null,
+      }
+    })
+    captures.value = mapped
+
+    // lazily generate thumbnails (optional)
+    for (const cap of captures.value) {
+      // if you want finger-specific bias, map id->key for the generator:
+      const key = idToKey(cap.finger)
+      cap.thumb = await generateFingerprintPng(key)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+function idToKey(id: number): FingerKey {
+  return (FINGERS.find((f) => f.id === id)?.key || 'L_INDEX') as FingerKey
+}
+
+function randomDate(): number {
+  const now = Date.now()
+  const past = now - 1000 * 60 * 60 * 24 * 30 // last 30 days
+  return past + Math.random() * (now - past)
+}
+
+function randomDevice() {
+  const devices = [
+    { name: 'ZK-U450', loc: 'Front Desk' },
+    { name: 'SecuScan-2', loc: 'Server Room' },
+    { name: 'BioNet-Edge', loc: 'HR Office' },
+  ]
+  return devices[Math.floor(Math.random() * devices.length)]
+}
+function labelFor(id: number) {
+  return FINGERS.find((f) => f.id === id)?.label || `Finger ${id}`
+}
 
 const q = ref('')
-const finger = ref<FingerKey | ''>('')
+const finger = ref<number | ''>('')
 const sort = ref<'new' | 'old' | 'conf'>('new')
 const page = ref(1)
 const pageSize = ref(12)
 
 onMounted(async () => {
   fetchOneUser()
+  fetchPrints()
   // create mock list
-  const base: Capture[] = Array.from({ length: 28 }).map((_, i) => ({
-    id: i + 1,
-    finger: FINGERS[i % FINGERS.length].key as FingerKey,
-    confidence: 70 + Math.floor(Math.random() * 30),
-    created_at: Date.now() - i * 3600 * 1000 * 4,
-    device_name: ['ZK-U450', 'SecuScan-2', 'BioNet-Edge'][i % 3],
-    device_loc: ['Front Desk', 'Server Room', 'HR Office'][i % 3],
-    thumb: null,
-  }))
-  captures.value = base
-  // lazily generate thumbnails
-  for (const cap of captures.value) {
-    cap.thumb = await generateFingerprintPng(cap.finger)
-  }
+  //   const base: Capture[] = Array.from({ length: 28 }).map((_, i) => ({
+  //     id: i + 1,
+  //     finger: FINGERS[i % FINGERS.length].key as FingerKey,
+  //     confidence: 70 + Math.floor(Math.random() * 30),
+  //     created_at: Date.now() - i * 3600 * 1000 * 4,
+  //     device_name: ['ZK-U450', 'SecuScan-2', 'BioNet-Edge'][i % 3],
+  //     device_loc: ['Front Desk', 'Server Room', 'HR Office'][i % 3],
+  //     thumb: null,
+  //   }))
+  //   captures.value = base
+  //   // lazily generate thumbnails
+  //   for (const cap of captures.value) {
+  //     cap.thumb = await generateFingerprintPng(cap.finger)
+  //   }
 })
 
 function confidenceLabel(val: number) {
@@ -350,9 +406,7 @@ const paged = computed(() =>
 function refresh() {
   page.value = 1
 }
-function labelFor(k: FingerKey) {
-  return FINGERS.find((f) => f.key === k)?.label || k
-}
+
 function initials(name: string) {
   return name
     .split(' ')

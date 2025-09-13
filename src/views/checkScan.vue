@@ -192,8 +192,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+const apiURL = import.meta.env.VITE_API_BASE
+import { ref, computed, onMounted } from 'vue'
 import Swal from '@/plugins/swal-theme'
+import axios from 'axios'
 
 interface DeviceDto {
   id: string
@@ -334,6 +336,18 @@ async function generateFingerprintPng(detail: 'quick' | 'detailed'): Promise<str
 
   return canvas.toDataURL('image/png')
 }
+
+const matchAPI = async () => {
+  try {
+    const response = await axios.get(apiURL + 'match')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(() => {
+  matchAPI()
+})
 </script>
 
 <style scoped>
