@@ -170,7 +170,7 @@
                       :class="[
                         'px-2.5 py-1 rounded-xl text-xs border backdrop-blur',
                         u.status === 'active' &&
-                          'bg-emerald-500/10 text-emerald-300 border-emerald-400/20',
+                          'dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-400/20 bg-emerald-600/10 text-emerald-700 border-emerald-500/10',
                         u.status === 'inactive' &&
                           'bg-amber-500/10 text-amber-300 border-amber-400/20',
                         u.status === 'locked' && 'bg-rose-500/10 text-rose-300 border-rose-400/20',
