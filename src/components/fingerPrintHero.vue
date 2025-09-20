@@ -20,24 +20,27 @@
           <div class="h-10 w-10 rounded-xl bg-white/10 grid place-items-center backdrop-blur">
             <i class="i bi-fingerprint text-xl"></i>
           </div>
-          <span class="font-semibold tracking-wide">Fingerprint System</span>
+          <span class="font-semibold tracking-wide dark:text-amber-600 light:text-white"
+            >Fingerprint System</span
+          >
         </div>
         <!-- <RouterLink to="/docs" class="text-sm text-white/70 hover:text-white transition"
           >Docs</RouterLink
         > -->
         <div class="flex gap-5">
           <button
-            @click="toggle"
-            class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-black/10 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
+            @click="toggle()"
+            class="inline-flex cursor-pointer items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-black/10 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
             aria-label="Toggle color mode"
           >
             <span v-if="isDark" class="i bi-moon-stars"></span>
             <span v-else class="i bi-brightness-high"></span>
             <span class="font-medium">{{ label }}</span>
           </button>
+
           <button
             @click="changeLang"
-            class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-black/10 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
+            class="inline-flex cursor-pointer items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-black/10 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
           >
             En/Ar
           </button>
@@ -163,7 +166,7 @@ import { computed } from 'vue'
 import { useTheme } from '../composable/useTheme'
 import Swal from '@/plugins/swal-theme'
 
-const { isDark, toggle, mode } = useTheme()
+const { isDark, toggle } = useTheme()
 const label = computed(() => (isDark.value ? 'Dark' : 'Light'))
 
 const changeLang = () => {
