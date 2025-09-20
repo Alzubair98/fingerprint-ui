@@ -22,7 +22,7 @@
           >
             <i class="i bi-fingerprint text-xl"></i>
           </div>
-          <span class="font-semibold tracking-wide">Fingerprint System</span>
+          <span class="font-semibold tracking-wide">{{ $t('common.appName') }}</span>
         </div>
 
         <div class="flex gap-5">
@@ -37,7 +37,7 @@
           </button>
 
           <button
-            @click="changeLang"
+            @click="toggleLan()"
             class="inline-flex cursor-pointer items-center gap-2 px-3 py-2 rounded-2xl border backdrop-blur text-sm transition border-slate-900/10 bg-white hover:bg-slate-50 dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
           >
             En/Ar
@@ -49,16 +49,16 @@
         <!-- left: copy -->
         <div class="text-center lg:text-right order-2 lg:order-1">
           <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-            Secure, Fast, and
+            {{ $t('common.Secure') }}
             <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-fuchsia-600 dark:from-indigo-400 dark:to-fuchsia-400"
-              >Beautiful</span
+            >
+              {{ $t('common.beautiful') }}</span
             >
           </h1>
 
           <p class="mt-4 max-w-xl lg:ml-auto lg:mr-0 mx-auto text-slate-600 dark:text-white/70">
-            Modren fingerprint system built with Vue&nbsp;3, Pinia, Tailwind, and SweetAlert2.
-            Smooth animations, glass UI, and production-ready structure.
+            {{ $t('common.desc') }}
           </p>
 
           <div class="mt-8 flex flex-col sm:flex-row gap-4 sm:justify-center lg:justify-end">
@@ -66,7 +66,7 @@
               class="group inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 bg-slate-900 text-white font-semibold shadow-lg hover:shadow-2xl transition active:scale-[.99] dark:bg-white dark:text-slate-900"
               @click="goScan"
             >
-              Start Scan
+              {{ $t('common.StartScan') }}
               <i class="bi bi-arrow-left-short text-xl group-hover:translate-x-1 transition"></i>
             </button>
 
@@ -74,7 +74,7 @@
               to="/manageScan"
               class="inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-semibold transition border bg-slate-900/5 text-slate-900 border-slate-900/10 hover:bg-slate-900/10 dark:bg-white/10 dark:text-white dark:border-white/10 dark:hover:bg-white/15"
             >
-              Manage Users
+              {{ $t('common.ManageUsers') }}
             </RouterLink>
           </div>
 
@@ -150,6 +150,8 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 const router = useRouter()
+import { useLocale } from '../composable/useLocale'
+const { locale, toggleLan, t } = useLocale()
 
 const dash = (i: number) => {
   const len = [480, 390, 300, 220, 140][i] || 200

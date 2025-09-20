@@ -8,10 +8,10 @@
       <div class="relative z-10 container mx-auto px-6">
         <header class="text-center max-w-2xl mx-auto">
           <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">
-            Do more with your fingerprints
+            {{ $t('common.Do') }}
           </h2>
           <p class="text-slate-600 dark:text-white/60 mt-2">
-            Fast actions to test, add and verify scans. Everything is mock-ready and API-friendly.
+            {{ $t('common.fast') }}
           </p>
         </header>
 
@@ -30,15 +30,15 @@
                 <i class="bi bi-shield-check text-xl"></i>
               </div>
               <h3 class="mt-4 text-lg font-semibold text-slate-900 dark:text-white">
-                Check Fingerprint
+                {{ $t('common.CheckFingerprint') }}
               </h3>
               <p class="mt-1 text-sm text-slate-600 dark:text-white/60">
-                Activate device, scan and preview a captured image (mock now, API later).
+                {{ $t('common.card3') }}
               </p>
               <div
                 class="mt-5 inline-flex items-center gap-1 text-sm text-indigo-600 dark:text-indigo-300 group-hover:gap-2 transition-all"
               >
-                Go to checker <i class="bi bi-arrow-right-short text-xl"></i>
+                {{ $t('common.checker') }} <i class="bi bi-arrow-right-short text-xl"></i>
               </div>
             </div>
           </RouterLink>
@@ -56,15 +56,15 @@
                 <i class="bi bi-fingerprint text-xl"></i>
               </div>
               <h3 class="mt-4 text-lg font-semibold text-slate-900 dark:text-white">
-                Add New Scan
+                {{ $t('common.newScan') }}
               </h3>
               <p class="mt-1 text-sm text-slate-600 dark:text-white/60">
-                Pick a user and capture a new fingerprint. Guided SweetAlert2 stages.
+                {{ $t('common.card2') }}
               </p>
               <div
                 class="mt-5 inline-flex items-center gap-1 text-sm text-indigo-600 dark:text-indigo-300 group-hover:gap-2 transition-all"
               >
-                Start a scan <i class="bi bi-arrow-right-short text-xl"></i>
+                {{ $t('common.start') }} <i class="bi bi-arrow-right-short text-xl"></i>
               </div>
             </div>
           </RouterLink>
@@ -82,15 +82,15 @@
                 <i class="bi bi-collection text-xl"></i>
               </div>
               <h3 class="mt-4 text-lg font-semibold text-slate-900 dark:text-white">
-                Manage Scans
+                {{ $t('common.ManageUsers') }}
               </h3>
               <p class="mt-1 text-sm text-slate-900 dark:text-white/60">
-                Browse users, trigger scans, delete, and filter—all in one place.
+                {{ $t('common.card1') }}
               </p>
               <div
                 class="mt-5 inline-flex items-center gap-1 text-sm text-indigo-600 dark:text-indigo-300 group-hover:gap-2 transition-all"
               >
-                Open dashboard <i class="bi bi-arrow-right-short text-xl"></i>
+                {{ $t('common.ManageUsers') }} <i class="bi bi-arrow-right-short text-xl"></i>
               </div>
             </div>
           </RouterLink>
@@ -134,33 +134,34 @@
               >
                 <i class="bi bi-fingerprint text-xl"></i>
               </div>
-              <span class="font-semibold tracking-wide text-slate-900 dark:text-white"
-                >Fingerprint System</span
-              >
+              <span class="font-semibold tracking-wide text-slate-900 dark:text-white">{{
+                $t('common.appName')
+              }}</span>
             </div>
             <p class="dark:text-white/60 mt-3 max-w-sm text-slate-600">
-              A modern frontend built with Vue 3, Tailwind, Pinia, and SweetAlert2. Smooth
-              animations, glass UI, mock-ready.
+              {{ $t('common.desc') }}
             </p>
           </div>
 
           <div class="text-sm">
-            <h4 class="font-semibold mb-3 text-slate-900 dark:text-white">Quick Links</h4>
+            <h4 class="font-semibold mb-3 text-slate-900 dark:text-white">
+              {{ $t('common.quick') }}
+            </h4>
             <ul class="space-y-2 dark:text-white/70 text-slate-600">
               <li>
-                <RouterLink class="hover:text-slate-900 dark:hover:text-white" to="/checkScan"
-                  >Check Fingerprint</RouterLink
-                >
+                <RouterLink class="hover:text-slate-900 dark:hover:text-white" to="/checkScan">{{
+                  $t('common.CheckFingerprint')
+                }}</RouterLink>
               </li>
               <li>
-                <RouterLink class="hover:text-slate-900 dark:hover:text-white" to="/newScan"
-                  >Add New Scan</RouterLink
-                >
+                <RouterLink class="hover:text-slate-900 dark:hover:text-white" to="/newScan">{{
+                  $t('common.newScan')
+                }}</RouterLink>
               </li>
               <li>
-                <RouterLink class="hover:text-slate-900 dark:hover:text-white" to="/manageScan"
-                  >Manage Scans</RouterLink
-                >
+                <RouterLink class="hover:text-slate-900 dark:hover:text-white" to="/manageScan">{{
+                  $t('common.ManageUsers')
+                }}</RouterLink>
               </li>
             </ul>
           </div>
@@ -193,6 +194,9 @@
 <script setup lang="ts">
 import fingerPrintHero from '@/components/fingerPrintHero.vue'
 import { computed } from 'vue'
+import { useLocale } from '@/composable/useLocale'
+
+const { locale, t } = useLocale()
 
 const year = computed(() => new Date().getFullYear())
 </script>
