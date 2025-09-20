@@ -84,7 +84,7 @@
               <h3 class="mt-4 text-lg font-semibold text-slate-900 dark:text-white">
                 Manage Scans
               </h3>
-              <p class="mt-1 text-sm text-white/60">
+              <p class="mt-1 text-sm text-slate-900 dark:text-white/60">
                 Browse users, trigger scans, delete, and filter—all in one place.
               </p>
               <div
